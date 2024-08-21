@@ -1,0 +1,154 @@
+/* Estilo general del cuerpo */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Alinea la caja2 desde arriba */
+    height: 100vh;
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: black;
+    color: white;
+}
+
+/* Estilo de la caja */
+.caja2 {
+    width: 1050px; /* Aumenta el ancho de la caja */
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
+    margin-top: 25px; /* Añade un margen superior para que no esté pegada a la parte superior */
+}
+
+/* Estilo del título */
+.caja2 h2 {
+    color: red; /* Color del título en rojo */
+    margin-bottom: 20px;
+}
+
+/* Contenedor del input y la imagen */
+.input-container {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centra el contenido del contenedor */
+    margin-bottom: 20px; /* Espacio debajo del contenedor del input */
+}
+
+/* Estilo del input */
+.caja2 input[type="text"] {
+    width: 300px; /* Ajusta el ancho del input para que la imagen quepa al lado */
+    padding: 8px;
+    border: none;
+    border-bottom: 1px solid black;
+    color: black;
+    margin-top: 30px;
+    outline: none;
+    background: none;
+    font-size: 16px;
+    position: relative;
+    left: -350px;
+    
+}
+
+/* Estilo de la imagen */
+.caja2 img.lupa {
+    width: 30px;
+    height: 30px;
+    position: relative;
+    left: -380px;
+    top: 15px;
+}
+
+/* Estilo de la tabla */
+.caja2 table {
+    width: 100%; /* Hace que la tabla ocupe todo el ancho disponible */
+    border-collapse: collapse;
+    margin-top: 50px; /* Espacio entre el input y la tabla */
+}
+
+.caja2 table, .caja_2 th, .caja2 td {
+    border: 1px solid black; /* Borde negro para la tabla */
+}
+
+.caja2 th, .caja2 td {
+    padding: 10px;
+    text-align: left;
+}
+
+.caja2 th {
+    background-color: #f2f2f2; /* Fondo gris claro para los encabezados de columna */
+    color: black;
+}
+
+/* Estilo del navbar */
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0 0 20px 0;
+    display: flex;
+    justify-content: flex-end; /* Alinea los elementos del navbar a la derecha */
+}
+
+nav ul li {
+    margin-right: 20px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    font-weight: bold;
+    color: black; /* Establece el color del texto predeterminado en negro */
+}
+
+nav ul li a#cer {
+    color: red; /* "Cerrar sesión" en rojo */
+}
+
+nav ul li a:hover {
+    text-decoration: underline;
+}
+
+/* Estilos para el pop-up */
+.popup {
+    display: none; /* Oculto por defecto */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.popup-content p {
+    margin-bottom: 20px;
+}
+
+.popup-content button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.popup-content .confirm {
+    background-color: red;
+    color: white;
+}
+
+.popup-content .cancel {
+    background-color: grey;
+    color: white;
+}
+#p{
+    color: black;
+}
