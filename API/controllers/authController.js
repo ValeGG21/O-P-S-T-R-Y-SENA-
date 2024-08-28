@@ -3,12 +3,13 @@ const jwt = require("jsonwebtoken");
 const bd = require("../config/db");
 
 exports.registerUsuario = (req, res) => {
-    const { nombre, contra, rol } = req.body;
-    const conEnciptada = bcrypt.hashSync(contra, 10);
+    const { tipo_documento, numero_documento, nombre, apellido, sede_id, telefono, contra, rol, novedad } = req.body;
+    const contraEncriptada = bcrypt.hashSync(contra, 10);
 
-    const query = `INSERT INTO usuario (nombre, contra, rol) VALUES (?, ?, ?)`;
+    const query = `INSERT INTO usuario (tipo_documento, numero_documento, nombre, apellido, sede_id, telefono, contra, rol, novedad) 
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
-    bd.query(query, [nombre, conEnciptada, rol], (err, result) => {
+    bd.query(query, [tipo_documento, numero_documento, nombre, apellido, sede_id, telefono, contraEncriptada, rol, novedad], (err, result) => {
         if (err) {
             console.error(err);
             return res.status(500).json({ error: "Hubo un error al registrar el usuario" });
@@ -34,15 +35,15 @@ exports.login = (req, res) => {
         if (!contraValida) {
             return res.status(401).json({ error: "Contraseña incorrecta" });
         }
-        const token = jwt.sign({ id: usuario.id, rol: usuario.rol }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ id: usuario.id_usuario, rol: usuario.rol }, process.env.JWT_SECRET, { expiresIn: '1h' });
         res.json({ token });
     });
 };
 
 exports.getUsuario = (req, res) => {
-    const { id } = req.user;
+    const { id } = req.usuario;
 
-    const query = `SELECT id, nombre, rol FROM usuario WHERE id = ?`;
+    const query = `SELECT id_usuario, tipo_documento, numero_documento, nombre, apellido, sede_id, telefono, rol, novedad FROM usuario WHERE id_usuario = ?`;
 
     bd.query(query, [id], (err, results) => {
         if (err || results.length === 0) {

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use GuzzleHttp\Client;
 
 class authController extends Controller
 {
@@ -40,5 +39,4 @@ class authController extends Controller
         session()->forget('jwt_token');
         return redirect()->route('login');
     }
-
 }

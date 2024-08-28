@@ -1,14 +1,32 @@
 const bd = require("../config/db");
+const bwipjs = require('bwip-js');
 
 exports.createEquipo = (req, res) => {
-    const { nombrePropietario, tipoIdentificacion, identificacion, equipo, descripcion, codigoBarras } = req.body;
-    const query = `INSERT INTO equipo (nombrePropietario, tipoIdentificacion, identificacion, equipo, descripcion, codigoBarras) VALUES (?, ?, ?, ?, ?, ?)`;
+    const { marca, descripcion, usuario_id, novedad } = req.body;
 
-    bd.query(query, [nombrePropietario, tipoIdentificacion, identificacion, equipo, descripcion, codigoBarras], (err, results) => {
+    bwipjs.toBuffer({
+        bcid: 'code128',
+        text: usuario_id + marca,
+        scale: 3, 
+        height: 10,
+        includetext: true,
+        textxalign: 'center',
+    }, (err, png) => {
         if (err) {
-            return res.status(500).json({ error: "Fallo al agregar el equipo" });
+            return res.status(500).json({ error: "Error generando el código de barras" });
         }
-        res.status(201).json({ message: "Equipo registrado" });
+
+        const codigoBarras = png.toString('base64');
+
+        const query = `INSERT INTO equipo (marca, descripcion, codigoBarras, usuario_id, novedad) 
+                       VALUES (?, ?, ?, ?, ?)`;
+
+        bd.query(query, [marca, descripcion, codigoBarras, usuario_id, novedad], (err, results) => {
+            if (err) {
+                return res.status(500).json({ error: "Fallo al registrar el equipo" });
+            }
+            res.status(201).json({ message: "Equipo registrado" });
+        });
     });
 };
 
@@ -29,10 +47,10 @@ exports.getEquipo = (req, res) => {
 
 exports.updateEquipo = (req, res) => {
     const { codigoBarras } = req.params;
-    const { nombrePropietario, tipoIdentificacion, identificacion, equipo, descripcion } = req.body;
-    const query = `UPDATE equipo SET nombrePropietario = ?, tipoIdentificacion = ?, identificacion = ?, equipo = ?, descripcion = ? WHERE codigoBarras = ?`;
+    const { marca, descripcion, usuario_id, novedad } = req.body;
+    const query = `UPDATE equipo SET marca = ?, descripcion = ?, usuario_id = ?, novedad = ? WHERE codigoBarras = ?`;
 
-    bd.query(query, [nombrePropietario, tipoIdentificacion, identificacion, equipo, descripcion, codigoBarras], (err, results) => {
+    bd.query(query, [marca, descripcion, usuario_id, novedad, codigoBarras], (err, results) => {
         if (err) {
             return res.status(500).json({ error: "Fallo al actualizar el equipo" });
         }
@@ -47,12 +65,13 @@ exports.ingresoYSalida = (req, res) => {
     const { codigoBarras } = req.params;
     const { tipo } = req.body;
 
-    const query = `INSERT INTO movimientos (codigoBarras, tipo) VALUES (?, ?)`;
+    const query = `INSERT INTO movimiento (equipo_id, tipo) 
+                   SELECT id_equipo, ? FROM equipo WHERE codigoBarras = ?`;
 
-    bd.query(query, [codigoBarras, tipo], (err, results) => {
+    bd.query(query, [tipo, codigoBarras], (err, results) => {
         if (err) {
             return res.status(500).json({ error: "Fallo al registrar el ingreso/salida" });
         }
-        res.status(201).json({ message: `Movimiento de ${tipo} registrado éxitosamente` });
+        res.status(201).json({ message: `Movimiento de ${tipo} registrado exitosamente` });
     });
 };
