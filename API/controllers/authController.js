@@ -6,7 +6,7 @@ exports.registerUsuario = (req, res) => {
     const { nombre, contra, rol } = req.body;
     const conEnciptada = bcrypt.hashSync(contra, 10);
 
-    const query = `INSERT INTO usuarios (nombre, contra, rol) VALUES (?, ?, ?)`;
+    const query = `INSERT INTO usuario (nombre, contra, rol) VALUES (?, ?, ?)`;
 
     bd.query(query, [nombre, conEnciptada, rol], (err, result) => {
         if (err) {
@@ -19,7 +19,7 @@ exports.registerUsuario = (req, res) => {
 
 exports.login = (req, res) => {
     const { nombre, contra } = req.body;
-    const query = `SELECT * FROM usuarios WHERE nombre = ?`;
+    const query = `SELECT * FROM usuario WHERE nombre = ?`;
 
     bd.query(query, [nombre], (err, results) => {
         if (err) {
@@ -42,7 +42,7 @@ exports.login = (req, res) => {
 exports.getUsuario = (req, res) => {
     const { id } = req.user;
 
-    const query = `SELECT id, nombre, rol FROM usuarios WHERE id = ?`;
+    const query = `SELECT id, nombre, rol FROM usuario WHERE id = ?`;
 
     bd.query(query, [id], (err, results) => {
         if (err || results.length === 0) {

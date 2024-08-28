@@ -2,7 +2,7 @@ const bd = require("../config/db");
 
 exports.createEquipo = (req, res) => {
     const { nombrePropietario, tipoIdentificacion, identificacion, equipo, descripcion, codigoBarras } = req.body;
-    const query = `INSERT INTO equipos (nombrePropietario, tipoIdentificacion, identificacion, equipo, descripcion, codigoBarras) VALUES (?, ?, ?, ?, ?, ?)`;
+    const query = `INSERT INTO equipo (nombrePropietario, tipoIdentificacion, identificacion, equipo, descripcion, codigoBarras) VALUES (?, ?, ?, ?, ?, ?)`;
 
     bd.query(query, [nombrePropietario, tipoIdentificacion, identificacion, equipo, descripcion, codigoBarras], (err, results) => {
         if (err) {
@@ -14,7 +14,7 @@ exports.createEquipo = (req, res) => {
 
 exports.getEquipo = (req, res) => {
     const { codigoBarras } = req.params;
-    const query = `SELECT * FROM equipos WHERE codigoBarras = ?`;
+    const query = `SELECT * FROM equipo WHERE codigoBarras = ?`;
 
     bd.query(query, [codigoBarras], (err, results) => {
         if (err) {
@@ -30,7 +30,7 @@ exports.getEquipo = (req, res) => {
 exports.updateEquipo = (req, res) => {
     const { codigoBarras } = req.params;
     const { nombrePropietario, tipoIdentificacion, identificacion, equipo, descripcion } = req.body;
-    const query = `UPDATE equipos SET nombrePropietario = ?, tipoIdentificacion = ?, identificacion = ?, equipo = ?, descripcion = ? WHERE codigoBarras = ?`;
+    const query = `UPDATE equipo SET nombrePropietario = ?, tipoIdentificacion = ?, identificacion = ?, equipo = ?, descripcion = ? WHERE codigoBarras = ?`;
 
     bd.query(query, [nombrePropietario, tipoIdentificacion, identificacion, equipo, descripcion, codigoBarras], (err, results) => {
         if (err) {
