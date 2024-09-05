@@ -1,30 +1,37 @@
 const express = require("express")
-const cors = require("cors")
-const dotenv = require("dotenv")
-const mysql = require("mysql2")
-const jwt = require("jsonwebtoken")
-const bcrypt = require("bcrypt")
+const session = require('express-session')
+const rateLimit = require('express-rate-limit')
+const helmet = require('helmet')
+const morgan = require('morgan')
 const authRoutes = require("./routes/authRoutes")
 const equipRoutes = require("./routes/equipRoutes")
-
-dotenv.config()
+const sequelize = require('./config/db')
 
 const app = express()
+
 app.use(express.json())
-app.use(cors({
-    origin: "la ruta del server de express del front o el server cuando lo subamos a uno",
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowHeaders: ['Content-Type', 'Authorization']
+app.use(express.urlencoded({ extended: true }))
+
+app.use(helmet())
+app.use(morgan('combined'))
+
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 100
+})
+app.use(limiter)
+
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
 }))
 
-app.use("/api/auth", authRoutes)
-app.use("/api/equip", equipRoutes)
+app.use('/auth', authRoutes)
+app.use('/equip', equipRoutes)
 
-const port = process.env.PORT || 3232
-
-app.listen(port, () => {
-    console.log(`http//:localhost:3232`);
-    
+sequelize.sync().then(() => {
+    app.listen(process.env.SERVER_PORT, () => {
+        console.log(`Server is running on port ${process.env.PORT}`)
+    })
 })
-
-// cryptojs, express session, express rate limit, helmet, morgan, sequelize.

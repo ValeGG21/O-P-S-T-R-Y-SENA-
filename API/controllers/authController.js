@@ -1,54 +1,54 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const bd = require("../config/db");
+const { Usuario } = require('../models/Usuario')
 
-exports.registerUsuario = (req, res) => {
-    const { tipo_documento, numero_documento, nombre, apellido, sede_id, telefono, contra, rol, novedad } = req.body;
-    const contraEncriptada = bcrypt.hashSync(contra, 10);
+exports.registerUsuario = async(req, res) => {
+    try{
+        const {tipo_documento, documento, nombre, apellido, sede_id, telefono, contra, rol} = req.body
 
-    const query = `INSERT INTO usuario (tipo_documento, numero_documento, nombre, apellido, sede_id, telefono, contra, rol, novedad) 
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-
-    bd.query(query, [tipo_documento, numero_documento, nombre, apellido, sede_id, telefono, contraEncriptada, rol, novedad], (err, result) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).json({ error: "Hubo un error al registrar el usuario" });
+        if(!tipo_documento || !documento || !nombre || !apellido || !sede_id || !telefono || !contra || !rol){
+            return res.status(400).send('Todos los campos son requeridos')
         }
-        res.status(201).json({ message: "Usuario registrado" });
-    });
+        const contraEncriptada =  await bcrypt.hash(contra, 10)
+        Usuario.create({tipo_documento, documento, nombre, apellido, sede_id, telefono, contra: contraEncriptada, rol, novedad: 'Creación'})
+
+        res.status(201).send('Usuario registrado correctamente')
+    }catch(err){
+        console.error(err)
+        res.status(500).send('Error al registrar')
+    }
 };
 
-exports.login = (req, res) => {
-    const { nombre, contra } = req.body;
-    const query = `SELECT * FROM usuario WHERE nombre = ?`;
+exports.login = async (req, res) => {
+    try{
+        const {documento, contra} = req.body
+        const usuario = await Usuario.findOne({where: {documento}})
+        if(!usuario){
+            return res.status(404).send('Usuario no encontrado')
+        }
 
-    bd.query(query, [nombre], (err, results) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).json({ error: "Hubo un error al iniciar sesión" });
+        const validacion = bcrypt.compareSync(contra, usuario.contra)
+        if(!validacion){
+            res.status(401).send('Contraseña incorrecta')
         }
-        if (results.length === 0) {
-            return res.status(401).json({ error: "Nombre de usuario no encontrado" });
-        }
-        const usuario = results[0];
-        const contraValida = bcrypt.compareSync(contra, usuario.contra);
-        if (!contraValida) {
-            return res.status(401).json({ error: "Contraseña incorrecta" });
-        }
-        const token = jwt.sign({ id: usuario.id_usuario, rol: usuario.rol }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.json({ token });
-    });
+
+        const token = jwt.sign({id: usuario.id, rol: usuario.rol}, process.env.SECRET_KEY, {expiresIn: '1h'})
+        res.json(token) 
+    }catch(err){
+        console.error(err)
+        res.status(500).send('Error al iniciar sesion')
+    }
 };
 
-exports.getUsuario = (req, res) => {
-    const { id } = req.usuario;
-
-    const query = `SELECT id_usuario, tipo_documento, numero_documento, nombre, apellido, sede_id, telefono, rol, novedad FROM usuario WHERE id_usuario = ?`;
-
-    bd.query(query, [id], (err, results) => {
-        if (err || results.length === 0) {
-            return res.status(404).json({ error: "Usuario no encontrado" });
+exports.getUsuario = async (req, res) => {
+    try{
+        const {id} = req.user
+        const usuario = await Usuario.findByPk(id)
+        if(!usuario){
+            return res.status(404).send('Usuario no encontrado')
         }
-        res.json(results[0]);
-    });
+        res.json(usuario)
+    }catch(err){
+        res.status(500).send('Error al obtener el usuario')
+    }
 };

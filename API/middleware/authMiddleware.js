@@ -6,7 +6,7 @@ exports.verifyToken = (req, res, next) => {
         return res.status(403).json({ error: "Acceso denegado, no se proporcionó un token" });
     }
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token, process.env.SECRET_KEY);
         req.usuario = decoded;
         next();
     } catch (err) {
