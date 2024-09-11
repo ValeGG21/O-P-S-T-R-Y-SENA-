@@ -1,6 +1,6 @@
 const express = require("express")
-const { verifyToken, isVigilante } = require("../middleware/authMiddleware")
-const { createEquipo, getEquipo, updateEquipo, ingresoYSalida } = require("../controllers/equipmentController")
+const { verifyToken, isVigilante } = require("../middleware/authMiddleware.js")
+const { createEquipo, getEquipo, updateEquipo, ingresoYSalida } = require("../controllers/equipmentController.js")
 
 const router = express.Router()
 

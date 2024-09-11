@@ -2,46 +2,48 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+    // Nombre de la tabla en la base de datos
+    protected $table = 'usuarios';
+    
+    // Clave primaria personalizada
+    protected $primaryKey = 'id_usuario';
+
+    // Campos que pueden ser llenados mediante asignación masiva (mass assignment)
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'tipo_documento',
+        'numero_documento',
+        'nombre',
+        'apellido',
+        'sede_id',
+        'telefono',
+        'contra',
+        'rol',
+        'novedad',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
+    // Campos que no se deben mostrar, como la contraseña
     protected $hidden = [
-        'password',
+        'contra',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    // Relación con la tabla `sedes`
+    public function sede()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->belongsTo(Sede::class, 'sede_id', 'id_sede');
+    }
+
+    // Mutador para encriptar la contraseña automáticamente
+    public function setContraAttribute($value)
+    {
+        $this->attributes['contra'] = Hash::make($value);
     }
 }

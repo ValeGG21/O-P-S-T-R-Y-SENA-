@@ -1,25 +1,27 @@
-const { Equipo, Movimiento } = require('../models')
+const Equipo = require('../models/Equipo.js')
+const Movimiento = require('../models/Movimiento.js')
 const path = require('path')
-const { generarCodBarras } = require('../utils/generadorCodBarras')
+const { generarCodBarras } = require('../utils/generadorCodBarras.js')
 
 exports.createEquipo = async (req, res) => {
     try {
         const { marca, descripcion, usuario_id } = req.body
+
         const textoCodBarras = `${marca}-${usuario.documento}`
-        const nuevoEquipo = await Equipo.create({ 
-            marca, 
-            descripcion, 
+        const nuevoEquipo = await Equipo.create({
+            marca,
+            descripcion,
             codigoBarras: textoCodBarras,
             usuario_id,
             novedad: 'Recien creado'
         })
 
-        const rutaCodBarras = path.join(__dirname, `../codBarras/${ textoCodBarras }.png`)
+        const rutaCodBarras = path.join(__dirname, `../codBarras/${textoCodBarras}.png`)
         await generarCodBarras(textoCodBarras, rutaCodBarras)
         res.status(201).json({
             message: 'equipo registrado',
             equipo: nuevoEquipo,
-            codigoBarras: `/codBarras/${ textoCodBarras }.png`
+            codigoBarras: `/codBarras/${textoCodBarras}.png`
         })
     } catch (err) {
         console.error(err)

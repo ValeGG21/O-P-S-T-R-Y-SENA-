@@ -1,5 +1,6 @@
-const { DataTypes } = require('sequelize')
-const sequelize = require('../config/db')
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/db.js');
+const Sede = require('./Sede.js');
 
 const Usuario = sequelize.define('Usuario', {
     id_usuario: {
@@ -13,7 +14,8 @@ const Usuario = sequelize.define('Usuario', {
     },
     numero_documento: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        unique: true
     },
     nombre: {
         type: DataTypes.STRING(500),
@@ -27,12 +29,14 @@ const Usuario = sequelize.define('Usuario', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'Sede',
+            model: Sede,
             key: 'id_sede'
-        }
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
     },
     telefono: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING(20),
         allowNull: false
     },
     contra: {
@@ -44,14 +48,13 @@ const Usuario = sequelize.define('Usuario', {
         allowNull: false
     },
     novedad: {
-        type: DataTypes.TEXT,
-        allowNull: false
-    },
+        type: DataTypes.TEXT
+    }
 }, {
     tableName: 'usuario',
     timestamps: true,
     createdAt: 'fecha_creacion',
     updatedAt: 'fecha_actualizacion'
-})
+});
 
-module.exports = Usuario
+module.exports = Usuario;

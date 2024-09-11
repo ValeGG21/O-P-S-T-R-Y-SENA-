@@ -1,37 +1,17 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\SuperAdminController;
+use App\Http\Controllers\DirectorSedeController;
+use App\Http\Controllers\VigilanteController;
 
-Route::get('/', function () {
-    return view('login');
-});
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::get('/login', function () {
-    return view('login');
-})->name('login');
+Route::get('/superadmin', [SuperAdminController::class, 'index'])->middleware('auth:superadmin');
+Route::post('/superadmin/sede', [SuperAdminController::class, 'createSede'])->middleware('auth:superadmin');
+Route::post('/superadmin/director', [SuperAdminController::class, 'createDirector'])->middleware('auth:superadmin');
 
-Route::post('/login', function (Request $request) {
-    // Aquí puedes manejar la lógica de autenticación
-    $credentials = $request->only('identificacion', 'contraseña');
-
-    // Por ejemplo, aquí puedes intentar autenticar al usuario (esto es solo un ejemplo):
-    // if (Auth::attempt(['identificacion' => $credentials['identificacion'], 'password' => $credentials['contraseña']])) {
-    //     // Autenticación exitosa
-    //     return redirect()->intended('dashboard');
-    // } else {
-    //     // Autenticación fallida
-    //     return redirect('/login')->withErrors(['login_failed' => 'Credenciales inválidas']);
-    // }
-
-    // Por ahora, solo devolveremos los datos recibidos para verificar que el formulario funciona
-    return $request->all();
-});
-
-Route::get('/info', function () {
-    return view('info');
-})->name('info');
-Route::post('/logout', function () {
-    Auth::logout();
-    return redirect('/login'); // Redirige al login después de cerrar sesión
-})->name('logout');
+Route::get('/director', [DirectorSedeController::class, 'index'])->middleware('auth:director');
+Route::post('/director/vigilante', [DirectorSedeController::class, 'createVigilante'])->middleware('auth:director');

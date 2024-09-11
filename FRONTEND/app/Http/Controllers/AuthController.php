@@ -3,40 +3,50 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
-class authController extends Controller
+class AuthController extends Controller
 {
-    protected $client;
+    public function showLoginForm()
+    {
+        return view('auth.login');
+    }
 
-    public function __construct(){
-        $this->client = new Client([
-            'base_uri' => env('API_URL')
+    public function login(Request $request)
+    {
+        $credentials = $request->only('documento', 'contra');
+
+        $response = Http::post('http://localhost:3000/auth/login', [
+            'documento' => $credentials['documento'],
+            'password' => $credentials['contra'],
         ]);
-    }
 
-    public function registrar(Request $request){
-        $response = $this->client->post('/auth/registrarUsuario', ['json' => $request->all()]);
+        if ($response->successful()) {
+            $user = $response->json();
 
-        $data = json_decode($response->getBody(), true);
+            session(['user' => $user]);
 
-        return redirect()->route('login')->with('message', $data['message']);
-    }
-
-    public function login(Request $request){
-        $response = $this->client->post('auth/iniciarSesion', ['json' => $request->all()]);
-
-        $data = json_decode($response->getBody(), true);
-
-        if(isset($data['token'])){
-            session(['jwt_token' => $data['token']]);
-            return redirect()->route('dashboard');
+            switch ($user['rol']) {
+                case 'superAdmin':
+                    return redirect()->route('superAdmin.index');
+                case 'director_sede':
+                    return redirect()->route('directorSede.index');
+                case 'vigilante':
+                    return redirect()->route('vigilante.index');
+                case 'usuario_comun':
+                    return redirect()->route('usuarioComun.index');
+                default:
+                    return redirect('/login');
+            }
         }
 
-        return back()->withErrors(['error' => $data['error']]);
+        return redirect()->back()->withErrors(['loginError' => 'Número de identificación o contraseña incorrectos']);
     }
 
-    public function logout(){
-        session()->forget('jwt_token');
-        return redirect()->route('login');
+    public function logout(Request $request)
+    {
+        session()->forget('user');
+        return redirect('/login');
     }
 }
+

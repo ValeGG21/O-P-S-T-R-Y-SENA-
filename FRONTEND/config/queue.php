@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default' => env('QUEUE_CONNECTION', 'database'),
+    'default' => env('QUEUE_DRIVER', 'sync'),
 
     /*
     |--------------------------------------------------------------------------
@@ -29,11 +29,9 @@ return [
     */
 
     'connections' => [
-
         'sync' => [
             'driver' => 'sync',
         ],
-
         'database' => [
             'driver' => 'database',
             'connection' => env('DB_QUEUE_CONNECTION'),
@@ -85,10 +83,10 @@ return [
     |
     */
 
-    'batching' => [
-        'database' => env('DB_CONNECTION', 'sqlite'),
-        'table' => 'job_batches',
-    ],
+    // 'batching' => [
+    //     'database' => env('DB_CONNECTION', 'sqlite'),
+    //     'table' => 'job_batches',
+    // ],
 
     /*
     |--------------------------------------------------------------------------
@@ -103,10 +101,19 @@ return [
     |
     */
 
-    'failed' => [
-        'driver' => env('QUEUE_FAILED_DRIVER', 'database-uuids'),
-        'database' => env('DB_CONNECTION', 'sqlite'),
-        'table' => 'failed_jobs',
+    // 'failed' => [
+    //     'driver' => env('QUEUE_FAILED_DRIVER', 'database-uuids'),
+    //     'database' => env('DB_CONNECTION', 'sqlite'),
+    //     'table' => 'failed_jobs',
+    // ],
+    'batching' => [
+        'database' => null,
+        'table' => null,
     ],
 
+    'failed' => [
+        'driver' => env('QUEUE_FAILED_DRIVER', 'null'),
+        'database' => null,
+        'table' => null,
+    ],
 ];
