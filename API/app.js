@@ -6,6 +6,7 @@ const morgan = require('morgan');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const authRoutes = require("./routes/authRoutes.js");
 const equipRoutes = require("./routes/equipRoutes.js");
+const sedeRoutes = require("./routes/sedeRoutes.js");
 const sequelize = require('./config/db.js');
 const dotenv = require('dotenv')
 const cors = require('cors');
@@ -18,7 +19,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cors({
-    origin: 'http://localhost:8000' // Ajusta esto según el origen de tu frontend
+    origin: 'http://localhost:8000'
 }));
 
 app.use(helmet());
@@ -47,6 +48,7 @@ app.use(session({
 
 // Rutas
 app.use('/auth', authRoutes);
+app.use('/sedes', sedeRoutes);
 app.use('/equip', equipRoutes);
 
 sequelize.sync({ alter: true })
@@ -59,3 +61,11 @@ sequelize.sync().then(() => {
         console.log(`Server is running on port ${port}`);
     });
 });
+
+
+const errorHandler = (err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ error: 'Internal server error' });
+};
+
+app.use(errorHandler);

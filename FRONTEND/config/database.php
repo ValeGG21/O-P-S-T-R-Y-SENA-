@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'sqlite'),
+    'default' => 'dummy',
 
     /*
     |--------------------------------------------------------------------------
@@ -31,10 +31,12 @@ return [
 
     'connections' => [
 
-        'sqlite' => [
+        'dummy' => [
             'driver' => 'sqlite',
-            'database' => env('DB_DATABASE', ':memory:'),
+            'database' => ':memory:',
             'prefix' => '',
+            'username' => '',
+            'password' => '',
         ],
 
         // 'sqlite' => [
@@ -118,18 +120,11 @@ return [
         //     // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         // ],
 
-        // 'apidb' => [
+        // 'api' => [
         //     'driver' => 'mysql',
-        //     'host' => env('API_DB_HOST', '127.0.0.1'),
-        //     'port' => env('API_DB_PORT', '3306'),
-        //     'database' => env('API_DB_DATABASE', 'prjFinal'),
-        //     'username' => env('API_DB_USERNAME', 'root'),
-        //     'password' => env('API_DB_PASSWORD', ''),
-        //     'charset' => env('API_DB_CHARSET', 'utf8mb4'),
-        //     'collation' => env('API_DB_COLLATION', 'utf8mb4_unicode_ci'),
-        //     'prefix' => '',
-        //     'strict' => true,
-        //     'engine' => null,
+        //     'url' => env('API_URL'),
+        //     'token' => env('API_TOKEN'),
+        //     'database' => env('API_BD')
         // ]
 
     ],

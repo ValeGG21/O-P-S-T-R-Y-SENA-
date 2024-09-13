@@ -2,51 +2,68 @@
 
 namespace App\Http\Controllers;
 
+use Http;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
     public function showLoginForm()
     {
-        return view('auth.login');
-    }
+        if (Session::has('rol')) {
+            $rol = Session::get('rol');
 
-    public function login(Request $request)
-    {
-        $credentials = $request->only('documento', 'contra');
-
-        $response = Http::post('http://localhost:3000/auth/login', [
-            'documento' => $credentials['documento'],
-            'password' => $credentials['contra'],
-        ]);
-
-        if ($response->successful()) {
-            $user = $response->json();
-
-            session(['user' => $user]);
-
-            switch ($user['rol']) {
-                case 'superAdmin':
-                    return redirect()->route('superAdmin.index');
-                case 'director_sede':
-                    return redirect()->route('directorSede.index');
-                case 'vigilante':
+            switch ($rol) {
+                case 'SuperAdmin':
+                    return redirect()->route('superadmin.index');
+                case 'DirectorSede':
+                    return redirect()->route('director.index');
+                case 'Vigilante':
                     return redirect()->route('vigilante.index');
-                case 'usuario_comun':
-                    return redirect()->route('usuarioComun.index');
-                default:
-                    return redirect('/login');
+                case 'UsuarioComun':
+                    return redirect()->route('usuario.index');
             }
         }
 
-        return redirect()->back()->withErrors(['loginError' => 'Número de identificación o contraseña incorrectos']);
+        return view('auth.login');
+    }
+    
+    public function login(Request $request)
+    {
+        $request->validate([
+            'numero_documento' => 'required',
+            'contra' => 'required',
+        ]);
+
+        try {
+            $response = Http::post('http://localhost:3000/auth/login', [
+                'numero_documento' => $request->input('numero_documento'),
+                'contra' => $request->input('contra')
+            ]);
+
+            if ($response->successful()) {
+                $data = $response->json();
+
+                session([
+                    'token' => $data['token'],
+                    'rol' => $data['rol'],
+                    'id_usuario' => $data['id_usuario']
+                ]);
+
+                return redirect()->route($data['rol'] . '.index');
+            } else {
+                return redirect()->route('login')->withErrors(['loginError' => 'Error en la respuesta del servidor.']);
+            }
+        } catch (\Exception $e) {
+            return redirect()->route('login')->withErrors(['loginError' => 'Error de servidor: ' . $e->getMessage()]);
+        }
     }
 
     public function logout(Request $request)
     {
-        session()->forget('user');
-        return redirect('/login');
+        Session::flush();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login');
     }
 }
-

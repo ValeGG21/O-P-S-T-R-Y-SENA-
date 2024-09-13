@@ -6,11 +6,11 @@
 <div class="usuario-container">
     <h2>Usuario Común - Información Personal y Equipos</h2>
 
-    <h3>Información Personal</h3>
-    <!-- Información personal -->
-
-    <h3>Equipos Registrados</h3>
-    <!-- Lista de equipos registrados -->
+    <ul>
+        @foreach($registrosEquipo as $registroEquipo)
+            <li>Equipo {{ $registroEquipo->equipo_id }} ({{ $registroEquipo->id }})</li>
+        @endforeach
+    </ul>
 </div>
 
 <style>

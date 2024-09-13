@@ -9,5 +9,4 @@ class Vigilante extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['tipo_documento', 'documento', 'nombre', 'apellido'];
 }

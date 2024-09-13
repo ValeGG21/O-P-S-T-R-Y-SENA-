@@ -1,14 +1,16 @@
 <?php
 
+
 namespace App\Http\Controllers;
 
+use App\Models\Equipo;
 use Illuminate\Http\Request;
 
 class UsuarioController extends Controller
 {
-    public function PaginaInicial(Request $request){
-        if($request->isMethod('GET')){
-            return view('usuarioComun.index');
-        }
+    public function index()
+    {
+        $registrosEquipo = Equipo::where('usuario_comun_id', auth()->user()->id)->get();
+        return view('usuariocomun.index', compact('registrosEquipo'));
     }
 }

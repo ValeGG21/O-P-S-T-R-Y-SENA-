@@ -11,8 +11,88 @@
         <input type="text" name="buscador" placeholder="Buscar registro">
         <img src="{{ asset('assets/img/buscar.png') }}" alt="Buscar" class="lupa">
     </article>
-    <button onclick="showModal('create-sede')">Crear Sede</button>
-    <button onclick="showModal('create-director')">Crear Director de Sede</button>
+
+    <div class="container">
+        <div class="btn-group">
+            <button id="sedesBtn" onclick="mostrarTabla('sedes')" class="btn">Sedes</button>
+            <button id="directoresBtn" onclick="mostrarTabla('directores')" class="btn">Directores</button>
+            <button onclick="showModal('create-sede')" class="btn">Crear Sede</button>
+            <button onclick="showModal('create-director')" class="btn">Crear Director</button>
+        </div>
+
+        <div id="tablaSedes" class="tabla-contenedor">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Departamento</th>
+                        <th>Ciudad</th>
+                        <th>Nombre de Sede</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($sedes as $sede)
+                    <tr>
+                        <td>{{ $sede->departamento }}</td>
+                    <td>{{ $sede->ciudad }}</td>
+                    <td>{{ $sede->nombre }}</td>
+                    <td>
+                        <button>Editar</button>
+                        <button>Eliminar</button>
+                    </td>
+                    </tr>
+                    @endforeach
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <button>Editar</button>
+                            <button>Eliminar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="tablaDirectores" class="tabla-contenedor" style="display:none;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Documento</th>
+                        <th>Sede Asignada</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($directores as $director)
+                    <tr>
+                        <td>{{ $director->nombre }}</td>
+                    <td>{{ $director->numero_documento }}</td>
+                    <td>{{ $director->sede->nombre }}</td>
+                    <td>
+                        <button>Editar</button>
+                        <button>Eliminar</button>
+                    </td>
+                    </tr>
+                    @endforeach
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <button>Editar</button>
+                            <button>Eliminar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+
 
 </section>
 
@@ -29,7 +109,7 @@
     <article class="modal-content">
         <span class="close" onclick="closeModal('create-sede')">&times;</span>
         <h2>Crear Nueva Sede</h2>
-        <form action="{{ route('create.sede') }}" method="POST">
+        <form action="{{ route('superadmin.createSede') }}" method="POST">
             @csrf
             <section class="form-group">
                 <label for="departamento">Departamento:</label>
@@ -56,55 +136,40 @@
     </article>
 </section>
 
-
 <section id="create-director-modal" class="modal">
     <article class="modal-content">
         <span class="close" onclick="closeModal('create-director')">&times;</span>
         <h2>Crear Nuevo Director de Sede</h2>
-        <form action="{{ route('login') }}" method="POST">
+        <form action="{{ route('superadmin.createDirectorSede') }}" method="POST">
             @csrf
             <section class="form-group">
-                <label for="nombre">Nombre del Director</label>
+                <select name="tipo_documento" id="tipo_documento">
+                    <option value="all">Tipo De Documento</option>
+                    <option value="TI">Tajeta De Identidad</option>
+                    <option value="CC">Cédula De Ciudadanía</option>
+                    <option value="OT">Otro</option>
+                </select>
+                <label for="numero_documento">Número de Documento</label>
+                <input type="text" name="numero_documento" id="numero_documento" required>
+                <label for="nombre">Nombres</label>
                 <input type="text" name="nombre" id="nombre" required>
+                <label for="apellido">Apellidos</label>
+                <input type="text" name="apellido" id="apellido" required>
+                <label for="sede_id">Sede</label>
+                <input type="text" name="sede_id" id="sede_id" value="i" disabled>
+                <input type="text" name="sede_id" id="sede_id" value="i" hidden>
+                <label for="rol">Rol</label>
+                <input type="text" name="rol" id="rol" value="Director De Sede" disabled>
+                <input type="text" name="rol" id="rol" value="DirectorSede" hidden>
+                <label for="novedad">Novedad</label>
+                <textarea name="novedad" id="novedad" cols="30" rows="4">Creación de director por parte del super administrador.   </textarea>
             </section>
             <button type="submit">Crear</button>
         </form>
     </article>
 </section>
 
-<style>
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1;
-        padding-top: 60px;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-    }
 
-    .modal-content {
-        background-color: white;
-        margin: 5% auto;
-        padding: 20px;
-        border: 1px solid #888;
-        width: 400px;
-    }
-
-    .close {
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-        cursor: pointer;
-    }
-
-    .close:hover {
-        color: red;
-    }
-
-</style>
 <script src="{{ asset('assets/js/script.js') }}"></script>
 <script>
     function showModal(modalId) {
@@ -157,5 +222,19 @@
         });
     });
 
+    function mostrarTabla(tabla) {
+        // Oculta ambas tablas
+        document.getElementById('tablaSedes').style.display = 'none';
+        document.getElementById('tablaDirectores').style.display = 'none';
+
+        // Muestra la tabla correspondiente
+        if (tabla === 'sedes') {
+            document.getElementById('tablaSedes').style.display = 'block';
+        } else if (tabla === 'directores') {
+            document.getElementById('tablaDirectores').style.display = 'block';
+        }
+    }
+
 </script>
+
 @endsection

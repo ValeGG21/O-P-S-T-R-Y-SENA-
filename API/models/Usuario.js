@@ -14,8 +14,7 @@ const Usuario = sequelize.define('Usuario', {
     },
     numero_documento: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-        unique: true
+        allowNull: false
     },
     nombre: {
         type: DataTypes.STRING(500),

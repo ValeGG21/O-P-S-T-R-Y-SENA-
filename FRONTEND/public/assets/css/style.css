@@ -56,8 +56,8 @@ body {
     color: transparent;
 }
 
-.caja_1 form input[type="submit"] {
-    width: 100px;
+.caja_1 form input[type="submit"], button {
+    width: 150px;
     padding: 8px;
     background-color: rgba(243, 27, 27, 0.349);
     border: none;
@@ -251,3 +251,180 @@ nav ul li a:hover {
 #p{
     color: black;
 }
+
+/* Estilos para los modales */
+.modal {
+    display: none; /* Oculto por defecto */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Asegúrate de que esté por encima de otros elementos */
+}
+
+.modal-content {
+    background-color: white;
+    margin: auto; /* Asegura que el modal esté centrado */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%; /* Ajusta el ancho del modal según tu preferencia */
+    max-width: 600px; /* Limita el ancho máximo del modal */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Añade sombra para un efecto más estético */
+    border-radius: 8px;
+}
+
+.close {
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: red;
+}
+
+
+.close:hover {
+    color: red; /* Color del botón de cerrar al pasar el ratón */
+}
+
+/* Estilo de los formularios dentro del modal */
+.modal form {
+    display: flex;
+
+    flex-direction: column;
+}
+
+/* Botones de formulario en el modal */
+.modal button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s; /* Transición para el color de fondo */
+}
+
+.modal button:hover {
+    background-color: #0056b3; /* Color de fondo al pasar el ratón */
+}
+
+.container button{
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+
+.btn-group {
+    display: flex;
+    justify-content: space-between; /* Espacio entre los grupos de botones */
+    width: 100%; /* Asegura que el grupo ocupe todo el ancho disponible */
+}
+
+.btn-group .btn {
+    margin: 0 10px; /* Espaciado opcional entre botones */
+}
+
+.btn-group button:nth-child(3){
+    margin-left: auto; /* Mueve los últimos dos botones al lado opuesto */
+}
+.btn-group button:nth-child(3), .btn-group button:nth-child(4){
+    background-color: #88b0dc;
+}
+
+.tabla-contenedor table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.tabla-contenedor th, .tabla-contenedor td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.tabla-contenedor th {
+    background-color: #f2f2f2;
+    color: #333;
+}
+
+.tabla-contenedor td button {
+    background-color: #f33;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.tabla-contenedor td button:hover {
+    background-color: #d22;
+}
+
+.input-container input {
+    width: calc(100% - 50px);
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.input-container img {
+    width: 30px;
+    cursor: pointer;
+    position: relative;
+    top: -30px;
+    left: calc(100% - 40px);
+}
+
+.modal-content {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    width: 500px;
+    margin: auto;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content input, .modal-content textarea {
+    width: 95%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+.modal-content textarea {
+    height: 1%;
+}
+.modal-content select{
+    width: 99%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.modal-content button {
+    width: 100%;
+    padding: 10px;
+    background-color: #f33;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.modal-content button:hover {
+    background-color: #d22;
+}
+
+

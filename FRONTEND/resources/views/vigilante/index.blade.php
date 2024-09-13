@@ -8,14 +8,15 @@
     <button onclick="showModal('create-usuario')">Registrar Usuario Común</button>
     <button onclick="showModal('create-equipo')">Registrar Equipo</button>
 
-    <h3>Lista de Usuarios Comunes</h3>
-    <!-- Lista de usuarios comunes -->
-
-    <h3>Ingresos y Salidas de Equipos</h3>
-    <!-- Lista de movimientos -->
+    <h2>Registros de Equipos</h2>
+    <ul>
+        @foreach($registrosEquipo as $registroEquipo)
+            <li>Equipo {{ $registroEquipo->equipo_id }} ({{ $registroEquipo->id }})</li>
+        @endforeach
+    </ul>
 </div>
 <section class="modal" id="create-equipo-modal">
-    <form method="POST" action="{{ route('register.equipo') }}">
+    <form method="POST" action="{{ route('vigilante.createRegistroEquipo') }}">
         @csrf
         <input type="text" name="marca" placeholder="Marca del Equipo" required>
         <input type="text" name="descripcion" placeholder="Descripción" required>
@@ -31,6 +32,8 @@
     <section>{{ session('success') }}</section>
     @endif
 </section>
+
+
 
 <style>
     .vigilante-container {

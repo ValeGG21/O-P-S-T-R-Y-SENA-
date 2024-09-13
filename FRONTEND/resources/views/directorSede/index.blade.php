@@ -7,11 +7,18 @@
     <h2>Director de Sede - Gestión de Vigilantes y Usuarios Comunes</h2>
     <button onclick="showModal('create-vigilante')">Crear Vigilante</button>
 
-    <h3>Vigilantes de la Sede</h3>
-    <!-- Lista de vigilantes -->
-
-    <h3>Usuarios Comunes</h3>
-    <!-- Lista de usuarios comunes -->
+    <h2>Vigilantes</h2>
+    <ul>
+        @foreach($vigilantes as $vigilante)
+            <li>{{ $vigilante->name }} ({{ $vigilante->id }})</li>
+        @endforeach
+    </ul>
+    <h2>Usuarios Comunes</h2>
+    <ul>
+        @foreach($usuariosComunes as $usuarioComun)
+            <li>{{ $usuarioComun->name }} ({{ $usuarioComun->id }})</li>
+        @endforeach
+    </ul>
 </section>
 
 <section id="create-vigilante-modal" class="modal">
@@ -40,6 +47,21 @@
         @endif
     </article>
 </section>
+{{-- 
+<h1>Director de Sede Dashboard</h1>
+    
+    <form action="{{ route('directorsede.createVigilante') }}" method="post">
+        @csrf
+        <label for="name">Nombre del Vigilante:</label>
+        <input type="text" id="name" name="name">
+        <button type="submit">Crear Vigilante</button>
+    </form>
+    <form action="{{ route('directorsede.createUsuarioComun') }}" method="post">
+        @csrf
+        <label for="name">Nombre del Usuario Comun:</label>
+        <input type="text" id="name" name="name">
+        <button type="submit">Crear Usuario Comun</button>
+    </form> --}}
 
 <style>
     .director-container {

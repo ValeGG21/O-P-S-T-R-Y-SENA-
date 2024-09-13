@@ -1,5 +1,5 @@
 const sequelize = require('sequelize')
-const Sede  = require('../models/Sede.js')
+const Sede = require('../models/Sede.js')
 
 exports.createSede = async (req, res) => {
     try {
@@ -8,7 +8,7 @@ exports.createSede = async (req, res) => {
         if (!nombre_sede || !departamento || !ciudad) {
             return res.status(400).send({ message: 'Falta información' })
         }
-        const nuevaSede = await Sede.create(nombre_sede, departamento, ciudad)
+        const nuevaSede = await Sede.create({ nombre_sede, departamento, ciudad })
         res.status(201).json({ message: `Sede creada éxitosamente`, sede: nuevaSede })
     } catch (err) {
         console.error(err)
@@ -27,6 +27,19 @@ exports.getSede = async (req, res) => {
     } catch (err) {
         console.error(err)
         res.status(500).json({ message: 'Error al obtener la sede' })
+    }
+}
+
+exports.getSedes = async (req, res) => {
+    try {
+        const sedes = await Sede.findAll();
+        if (!sedes) {
+            return res.status(404).send({ message: 'No hay sedes' })
+        }
+        res.json(sedes);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Error al obtener las sedes' });
     }
 }
 

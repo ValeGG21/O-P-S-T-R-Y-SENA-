@@ -1,4 +1,4 @@
-const { DataTypes } = require('sequelize')
+const { DataTypes, UniqueConstraintError } = require('sequelize')
 const sequelize = require('../config/db.js')
 
 const Equipo = sequelize.define('Equipo', {
@@ -16,9 +16,9 @@ const Equipo = sequelize.define('Equipo', {
         allowNull: false
     },
     codigoBarras: {
-        type: DataTypes.TEXT,
+        type: DataTypes.STRING(300),
         allowNull: false,
-        unique: true    
+        UniqueConstraintError  
     },
     usuario_id: {
         type: DataTypes.INTEGER,
